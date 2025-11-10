@@ -1,29 +1,15 @@
 clc;
 clear;
 close;
-
-count = csvRead("C:\scilab_projects\user defined functions\count.dat");
-
-mu = zeros(1, 3);      // Preallocate mean array
-sigma = zeros(1, 3);   // Preallocate standard deviation array
-
+count = csvRead(&#39;C:\scilab_projects\user defined functions\count.dat&#39;);
 for i = 1:3
-    scf(); // Create new figure window
-
-    mu(i) = mean(count(:, i));
-    sigma(i) = stdev(count(:, i));
-
-    histplot(24, count(:, i));
-    xtitle("Histogram of Traffic Intersection " + string(i));
+scf();
+mu(i) = mean(count(:, i));
+sigma(i) = stdev(count(:, i));
+histplot(24,count(:, i));
+xtitle(&#39;Histogram of Traffic Intersection &#39; + string(i));
 end
-
 MeanTotal = mean(mean(count));
-
-disp("Mean for individual Traffic Intersection is:");
-disp(mu);
-
-disp("Standard Deviation for individual Traffic Intersection is:");
-disp(sigma);
-
-disp("Overall Mean:");
-disp(MeanTotal);
+disp(&#39;Mean for individual Traffic Intersection is =&#39;, mu);
+disp(&#39;Standard Deviation for individual Traffic Intersection is =&#39;,sigma);
+disp(&#39;Overall Mean=&#39;,MeanTotal);
