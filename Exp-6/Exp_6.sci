@@ -18,4 +18,4 @@ subplot(1,2,2);
 scatter(real(y), imag(y),"fill");
 h = gca(); 
 h.data_bounds = [-3.5,3.5,-3.5,3.5];
-xtitle('E3403 M-QAM', 'E3403 In-phase', 'E3403 Quadrature');
+xtitle('Exxx M-QAM', 'Exxx In-phase', 'Exxx Quadrature');
