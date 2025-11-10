@@ -2,7 +2,7 @@ clc;
 clear;
 close;
 // User info
-disp("* Name –Om Taur Roll No. - E3125 *");
+disp("* Name – XX Roll No. - XX *");
 
 // ----- M-ary Modulation -----
 N = 4;        // Number of bits per symbol
