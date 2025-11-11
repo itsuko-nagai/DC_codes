@@ -1,35 +1,40 @@
-clc;
-close;
-clear;
-D = poly (0, &#39;D&#39; );
-g = 1+D+0+D ^3; // generator polynomial
-m = (D^3) *(1+0+0+ D^3); //message sequence
-[r,q] = pdiv (m,g);
-p = coeff (r);
-disp (r, &#39; remainder in polynomial form &#39; )
-disp (p, &#39; Parity bits are : &#39; )
-disp ( &#39; Table 8.3 Contents of the Shift Register in the Encoder of fig 8.7 for Message Sequence (1 0 0
-1 ) &#39;)
-disp ( &#39;--------------------------------------------------------------------&#39;)
-disp ( &#39; Shift Input Register Contents &#39; )
-disp ( &#39;-----------------------------------------------&#39; )
-disp ( &#39; 1 1 1 1 0 &#39; )
-disp ( &#39; 2 0 0 1 1 &#39; )
-disp ( &#39; 3 0 1 1 1 &#39; )
-disp ( &#39; 4 1 0 1 1 &#39; )
-
-disp ( &#39;--------------------------&#39; )
-
-//syndrome calculator for the(7,4) Cyclic Hamming Code
-C1=0+D+D^2+D^3+0+0+D^6;// e r r o r f r e ecodeword
-C2=0+D+D^2+0+0+0+D^6;//middl e b i t i s e r r o r
-[r1,q1]=pdiv(C1,g);
-S1=coeff(r1);
-S1=modulo(S1,2);
-disp(r1,&#39; remainder in polynomial form &#39;)
-disp(S1,&#39; Syndrome bits for error free codeword are : &#39;)
-[r2,q2]=pdiv(C2,g);
-S2=coeff(r2);
-S2=modulo(S2,2);
-disp(r2,&#39; remainder in polynomial form for erroredcodeword &#39;)
-disp(S2,&#39; Syndrome bits for erroredcodeword are : &#39;)
+ clc;
+ clear;
+ exec('C:\scilab_projects\user defined functions\deconv.sci');
+ n = input('Enter the length of codeword : ');
+ k = input('Enter the length of message : ');
+ gen_coff = input('Enter the generator coefficient : ');
+ m = input('Enter the message : ');
+ y2 = [1];
+ a = zeros(1, n - k);
+ z1 = [y2 a];
+ x = conv(z1, m);
+ x1 = pmodulo(x, 2);
+ [q, r] = deconv(x1,gen_coff);
+ r1 = [zeros(1, length(x1) - length(r)),r];
+ codeword = bitxor(x1,r1); //codeword = (x1 & ~r1) | (~x1 & r1);
+ disp('CYCLIC CODEWORD= ',codeword*1);
+ rec = input('Enter the received codeword : ');
+ [q,r] = deconv(rec, gen_coff);
+ syn = pmodulo(r, 2);
+ disp('Syndrome for received codeword is:',syn);
+ if syn == 0 then
+ disp('No error in received code, No need of correction ');
+ else
+ disp('Non zero syndrome indicates Error in received code');
+ syn = [zeros(1, length(x1) - length(syn)),syn];
+ y2 = zeros(n, n);
+ e = eye(n, n);
+ for i = 1:n
+ [q, r] = deconv(e(i,:),gen_coff);
+ r1 = [zeros(1,n - length(r)),r];
+ y2(i,:) = pmodulo(r1, 2);
+ end
+ for i = 1:n
+ if syn == y2(i,:) then
+ break
+ end
+ end
+ correctedCode=bitxor(rec,e(i,:));
+ disp('CORRECTED CODEWORD= ',correctedCode*1);
+ end
